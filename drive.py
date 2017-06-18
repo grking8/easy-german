@@ -1,6 +1,5 @@
 
 from __future__ import print_function
-import httplib2
 import os
 
 from apiclient.http import MediaFileUpload
@@ -53,35 +52,3 @@ def upload_media(service, path, mime_type, resumable=True):
     file_metadata = {'name': path}
     media = MediaFileUpload(path, mimetype=mime_type, resumable=resumable)
     service.files().create(body=file_metadata, media_body=media).execute()
-    
-
-# def main():
-#     credentials = get_credentials()
-#     http = credentials.authorize(httplib2.Http())
-#     service = discovery.build('drive', 'v3', http=http)
-#
-#     path = '/Users/guyking/Documents/How to learn German faster (with Michael from smarterGerman) _ Easy German 199-_JQjnKreDmQ.mp3'
-#     mime_type = 'audio/mp3'
-#     upload_media(service, path, mime_type)
-#
-#
-#     # file_metadata = { 'name': path}
-#     #
-#     # media = MediaFileUpload(path, mimetype='audio/mp3', resumable=True)
-#     #
-#     # service.files().create(body=file_metadata, media_body=media).execute()
-#
-#
-#
-#     # results = service.files().list(
-# #         pageSize=10,fields="nextPageToken, files(id, name)").execute()
-# #     items = results.get('files', [])
-# #     if not items:
-# #         print('No files found.')
-# #     else:
-# #         print('Files:')
-# #         for item in items:
-# #             print('{0} ({1})'.format(item['name'], item['id']))
-#
-# if __name__ == '__main__':
-#     main()
