@@ -13,10 +13,6 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
 
-    path = '/Users/guyking/Documents/How to learn German faster (with Michael from smarterGerman) _ Easy German 199-_JQjnKreDmQ.mp3'
-    mime_type = 'audio/mp3'
-    upload_media(service, path, mime_type)
-
     youtube_key_path = 'key.txt'
     with open(youtube_key_path, 'r') as f:
         youtube_key = f.read()
@@ -36,7 +32,6 @@ def main():
     
     subprocess.check_output(['youtube-dl', video_url, '--extract-audio',
                             '--audio-format', 'mp3'])
-    print('{}-{}.mp3'.format(items[0]['snippet']['title'].replace('|', '_'), video_id))
     mime_type = 'audio/mp3'
     filename = '{}-{}.{}'.format(items[0]['snippet']['title'].replace('|', '_'), video_id, mime_type.split('/')[-1])
 
