@@ -17,10 +17,11 @@ def main():
     with open(youtube_key_path, 'r') as f:
         youtube_key = f.read()
 
+    channel_id = 'UCbxb2fqe9oNgglAoYqsYOtQ'
     part = 'snippet,id'
     order = 'date'
     max_results = 20
-    search_url =  'https://www.googleapis.com/youtube/v3/search?key={}&part={}&order={}&maxResults={}'.format(youtube_key, part, order, max_results)
+    search_url =  'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(youtube_key, channel_id, part, order, max_results)
 
     resp = requests.get(search_url)
     js = json.loads(resp.text)
