@@ -52,3 +52,11 @@ def upload_media(service, path, mime_type, resumable=True):
     file_metadata = {'name': path}
     media = MediaFileUpload(path, mimetype=mime_type, resumable=resumable)
     service.files().create(body=file_metadata, media_body=media).execute()
+
+def create_folder(service, name):
+    file_metadata = {
+        'name': name,
+        'mimeType': 'application/vnd.google-apps.folder'
+    }
+    service.files().create(body=file_metadata).execute()
+    
