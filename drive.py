@@ -9,7 +9,8 @@ from oauth2client.file import Storage
 
 try:
     import argparse
-    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+    flags = argparse.ArgumentParser(
+        parents=[tools.argparser]).parse_args()
 except ImportError:
     flags = None
 
@@ -31,32 +32,55 @@ def get_credentials():
     """
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
+    
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'easy-german.json')
+        
+    credential_path = os.path.join(credential_dir, 'easy-german.json')
 
     store = Storage(credential_path)
     credentials = store.get()
+    
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
+        
         if flags:
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatibility with Python 2.6
             credentials = tools.run(flow, store)
+            
         print('Storing credentials to ' + credential_path)
+        
     return credentials
 
-def upload_media(service, path, mime_type, resumable=True):
-    file_metadata = {'name': path}
-    media = MediaFileUpload(path, mimetype=mime_type, resumable=resumable)
-    service.files().create(body=file_metadata, media_body=media).execute()
+
+def upload_media(service, path, mime_type, parents=None, resumable=True):
+    splits = path.rsplit('/', 1)
+    
+    if len(splits) == 1:
+        name = splits[0]
+    else:
+        name = splits[1]
+
+    file_metadata = {'name': name}
+    
+    if parents:
+        file_metadata['parents'] = parents
+    
+    media = MediaFileUpload(
+        path, mimetype=mime_type, resumable=resumable)
+    resp = service.files().create(
+        body=file_metadata, media_body=media, fields='id'
+    ).execute()
+
 
 def create_folder(service, name):
     file_metadata = {
         'name': name,
         'mimeType': 'application/vnd.google-apps.folder'
     }
-    service.files().create(body=file_metadata).execute()
-    
+    resp = service.files().create(
+        body=file_metadata, fields='id'
+    ).execute()
+    return resp.get('id')

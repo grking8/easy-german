@@ -21,7 +21,8 @@ def main():
     part = 'snippet,id'
     order = 'date'
     max_results = 20
-    search_url =  'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(youtube_key, channel_id, part, order, max_results)
+    search_url =  'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(
+        youtube_key, channel_id, part, order, max_results)
 
     resp = requests.get(search_url)
     js = json.loads(resp.text)
@@ -32,15 +33,12 @@ def main():
     video_url = base_url.format(video_id)
     
     subprocess.check_output(['youtube-dl', video_url, '--extract-audio',
-                            '--audio-format', 'mp3'])
+                            '--audio-format', 'mp3', '--id'])
     mime_type = 'audio/mp3'
-    filename = '{}-{}.{}'.format(items[0]['snippet']['title'].replace('|', '_'), video_id, mime_type.split('/')[-1])
+    path = '{}.{}'.format(video_id, mime_type.split('/')[-1])
 
-    upload_media(service, filename, mime_type)
+    upload_media(service, path, mime_type)
     
 
 if __name__ == '__main__':
     main()
-
-    
-
