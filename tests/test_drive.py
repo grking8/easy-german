@@ -26,7 +26,7 @@ def test_create_folder_raises_exception_non_string_name(service, name):
         
 
 ASSETS = 'tests/assets/'  
-FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM' # in Drive there exists folder with this id
+FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM' # id of folder in Drive
 @pytest.mark.parametrize('path,mime_type,parents', 
                          [('{}wombat.png'.format(ASSETS), 'image/png', None),
                           ('{}hello.txt'.format(ASSETS), 'text/plain', None),
