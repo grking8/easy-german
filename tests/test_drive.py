@@ -29,3 +29,11 @@ def test_create_folder_raises_exception_non_string_name(service, name):
                          [('tests/assets/wombat.png', 'image/png')])
 def test_upload_media(service, path, mime_type):
     assert upload_media(service, path, mime_type).get('name') == 'wombat.png'
+    
+    
+@pytest.mark.parametrize('path,mime_type',
+                         [('path/to/nonexistent/file', 'image/png')])
+def test_upload_media_raises_exception_non_existent_file(service, path,
+                                                         mime_type):
+    with pytest.raises(FileNotFoundError):
+        upload_media(service, path, mime_type)
