@@ -76,11 +76,15 @@ def upload_media(service, path, mime_type, parents=None, resumable=True):
 
 
 def create_folder(service, name):
+    
+    if not isinstance(name, str):
+        raise TypeError('Folder name should be a string.')
+        
     file_metadata = {
         'name': name,
         'mimeType': 'application/vnd.google-apps.folder'
     }
     resp = service.files().create(
-        body=file_metadata, fields='id'
+        body=file_metadata, fields='id,name'
     ).execute()
-    return resp.get('id')
+    return resp

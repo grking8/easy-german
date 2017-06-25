@@ -1,8 +1,8 @@
 import json
 import subprocess
 
-import requests
 import httplib2
+import requests
 from apiclient import discovery
 
 from drive import get_credentials
@@ -27,18 +27,18 @@ def main():
     resp = requests.get(search_url)
     js = json.loads(resp.text)
     items = js['items']
-    
+
     base_url = 'https://www.youtube.com/watch?v={}'
     video_id = items[0]['id']['videoId']
     video_url = base_url.format(video_id)
-    
+
     subprocess.check_output(['youtube-dl', video_url, '--extract-audio',
                             '--audio-format', 'mp3', '--id'])
     mime_type = 'audio/mp3'
     path = '{}.{}'.format(video_id, mime_type.split('/')[-1])
 
     upload_media(service, path, mime_type)
-    
+
 
 if __name__ == '__main__':
     main()
