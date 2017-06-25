@@ -56,6 +56,10 @@ def get_credentials():
 
 
 def upload_media(service, path, mime_type, parents=None, resumable=True):
+    
+    if not os.path.isfile(path):
+        raise FileNotFoundError('Media file does not exist.')
+    
     splits = path.rsplit('/', 1)
     
     if len(splits) == 1:
@@ -71,7 +75,8 @@ def upload_media(service, path, mime_type, parents=None, resumable=True):
     media = MediaFileUpload(
         path, mimetype=mime_type, resumable=resumable)
     resp = service.files().create(
-        body=file_metadata, media_body=media, fields='id').execute()
+        body=file_metadata, media_body=media, fields='id,name').execute()
+    return resp
 
 
 def create_folder(service, name):

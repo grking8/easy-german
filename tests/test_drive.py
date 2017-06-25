@@ -4,6 +4,7 @@ from apiclient import discovery
 
 from drive import create_folder
 from drive import get_credentials
+from drive import upload_media
 
 @pytest.fixture
 def service():
@@ -22,3 +23,9 @@ def test_create_folder(service, name):
 def test_create_folder_raises_exception_non_string_name(service, name):
     with pytest.raises(TypeError):
         create_folder(service, name)
+        
+        
+@pytest.mark.parametrize('path,mime_type', 
+                         [('tests/assets/wombat.png', 'image/png')])
+def test_upload_media(service, path, mime_type):
+    assert upload_media(service, path, mime_type).get('name') == 'wombat.png'
