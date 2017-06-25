@@ -24,11 +24,18 @@ def test_create_folder_raises_exception_non_string_name(service, name):
     with pytest.raises(TypeError):
         create_folder(service, name)
         
-        
+
+ASSETS = 'tests/assets/'        
 @pytest.mark.parametrize('path,mime_type', 
-                         [('tests/assets/wombat.png', 'image/png')])
+                         [('{}wombat.png'.format(ASSETS), 'image/png'),
+                          ('{}hello.txt'.format(ASSETS), 'text/plain'),
+                          ('{}ZdeUwPFB02Y.mp3'.format(ASSETS), 'audio/mp3'),
+                          ('{}pytest.pdf'.format(ASSETS), 'application/pdf'),
+                          ('{}yellow.jpg'.format(ASSETS), 'image/jpeg')])
 def test_upload_media(service, path, mime_type):
-    assert upload_media(service, path, mime_type).get('name') == 'wombat.png'
+    assert upload_media(service, path, mime_type).get('name') in {
+        'wombat.png', 'hello.txt', 'ZdeUwPFB02Y.mp3', 'pytest.pdf',
+        'yellow.jpg'}
     
     
 @pytest.mark.parametrize('path,mime_type',
