@@ -1,12 +1,15 @@
 import json
 import subprocess
 
-import httplib2
-import requests
 from apiclient import discovery
 
 from drive import get_credentials
 from drive import upload_media
+
+import httplib2
+
+import requests
+
 
 def main():
     credentials = get_credentials()
@@ -21,7 +24,7 @@ def main():
     part = 'snippet,id'
     order = 'date'
     max_results = 20
-    search_url =  'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(
+    search_url = 'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(  # NOQA
         youtube_key, channel_id, part, order, max_results)
 
     resp = requests.get(search_url)
