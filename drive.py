@@ -93,5 +93,5 @@ def create_folder(service, name):
         body=file_metadata, fields='id,name').execute()
 
 
-def delete_folder(service, file_id):
-    pass
+def delete_file(service, file_id):
+    return service.files().delete(fileId=file_id).execute()
