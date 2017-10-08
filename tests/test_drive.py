@@ -58,8 +58,9 @@ GOOGLE_DRIVE_FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'
                           ('{}yellow.jpg'.format(ASSETS), 'image/jpeg',
                            [GOOGLE_DRIVE_FOLDER_ID])])
 def test_upload_media(service, path, mime_type, parents):
-    assert (upload_media(service, path, mime_type, parents).get('name') ==
-            os.path.basename(path))
+    resp = upload_media(service, path, mime_type, parents)
+    assert resp.get('name') == os.path.basename(path)
+    delete_file(service, resp.get('id'))
 
 
 @pytest.mark.parametrize('path,mime_type',
