@@ -29,7 +29,7 @@ def test_create_folder_raises_exception_non_string_name(service, name):
 
 
 ASSETS = 'tests/assets/'
-FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'  # in Drive
+GOOGLE_DRIVE_FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'
 
 
 @pytest.mark.parametrize('path,mime_type,parents',
@@ -41,7 +41,7 @@ FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'  # in Drive
                            None),
                           ('{}yellow.jpg'.format(ASSETS), 'image/jpeg', None),
                           ('{}yellow.jpg'.format(ASSETS), 'image/jpeg',
-                           [FOLDER_ID])])
+                           [GOOGLE_DRIVE_FOLDER_ID])])
 def test_upload_media(service, path, mime_type, parents):
     assert upload_media(service, path, mime_type, parents).get('name') in {
         'wombat.png', 'hello.txt', 'ZdeUwPFB02Y.mp3', 'pytest.pdf',
