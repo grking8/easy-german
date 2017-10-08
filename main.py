@@ -1,5 +1,9 @@
+import atexit
+import logging
 import os
+import shutil
 import subprocess
+import tempfile
 
 from apiclient import discovery
 
@@ -11,12 +15,18 @@ import httplib2
 import requests
 
 
+logger = logging.getLogger(__name__)
+
 CHANNEL_ID = 'UCbxb2fqe9oNgglAoYqsYOtQ'
 MIME_TYPE = 'audio/mp3'
 EXTENSION = 'mp3'
 MAX_RESULTS = 2
 ORDER = 'date'
 PART = 'snippet,id'
+
+
+def clear_local_media(tmp_dir):
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def main():
@@ -32,11 +42,23 @@ def main():
 
     for item in items:
         video_id = item['id']['videoId']
-        subprocess.check_output(['youtube-dl', '--extract-audio',
-                                 '--audio-format', 'mp3', '--id', '--newline',
-                                 '--verbose', video_url.format(video_id)])
-        path = '{}.{}'.format(video_id, EXTENSION)
-        upload_media(service, path, MIME_TYPE)
+        video_url = video_url.format(video_id)
+        file_name = '{}.{}'.format(video_id, EXTENSION)
+        tmp_dir = tempfile.mkdtemp()
+        atexit.register(clear_local_media, tmp_dir=tmp_dir)
+        local_path = os.path.join(tmp_dir, file_name)
+
+        try:
+            subprocess.check_output(['youtube-dl', '--extract-audio',
+                                     '--audio-format', 'mp3', '--newline',
+                                     '--verbose', '--output', local_path,
+                                     video_url])
+        except Exception:
+            logger.exception('Error downloading video.')
+
+        upload_media(service, local_path, MIME_TYPE)
+        clear_local_media(tmp_dir)
+        atexit.unregister(clear_local_media)
 
 
 if __name__ == '__main__':
