@@ -22,7 +22,9 @@ def service():
 
 @pytest.mark.parametrize('name', ['testFolderA'])
 def test_create_folder(service, name):
-    assert create_folder(service, name).get('name') == name
+    resp = create_folder(service, name)
+    assert resp.get('name') == name
+    delete_file(service, resp.get('id'))
 
 
 @pytest.mark.parametrize('name', [23])
