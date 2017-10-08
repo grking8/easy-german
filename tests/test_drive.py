@@ -3,6 +3,7 @@ import os
 from apiclient import discovery
 
 from drive import create_folder
+from drive import delete_folder
 from drive import get_credentials
 from drive import upload_media
 
@@ -28,6 +29,11 @@ def test_create_folder(service, name):
 def test_create_folder_raises_exception_non_string_name(service, name):
     with pytest.raises(TypeError):
         create_folder(service, name)
+
+
+@pytest.mark.parametrize('file_id', ['id=1OHpoqncP2m1pQOuwvf9II8dtWUBVCf-H06VcxCa9co0'])
+def test_delete_folder(service, file_id):
+    assert delete_folder(service, file_id) == {}
 
 
 ASSETS = 'tests/assets/'

@@ -91,3 +91,7 @@ def create_folder(service, name):
     }
     return service.files().create(
         body=file_metadata, fields='id,name').execute()
+
+
+def delete_folder(service, file_id):
+    pass
