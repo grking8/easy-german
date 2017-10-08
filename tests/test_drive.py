@@ -43,9 +43,9 @@ GOOGLE_DRIVE_FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'
                           ('{}yellow.jpg'.format(ASSETS), 'image/jpeg',
                            [GOOGLE_DRIVE_FOLDER_ID])])
 def test_upload_media(service, path, mime_type, parents):
-    assert upload_media(service, path, mime_type, parents).get('name') in {
+    assert upload_media(service, path, mime_type, parents).get('name') in (
         'wombat.png', 'hello.txt', 'ZdeUwPFB02Y.mp3', 'pytest.pdf',
-        'yellow.jpg'}
+        'yellow.jpg')
 
 
 @pytest.mark.parametrize('path,mime_type',
