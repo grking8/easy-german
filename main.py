@@ -21,9 +21,7 @@ logger = logging.getLogger(__name__)
 CHANNEL_ID = 'UCbxb2fqe9oNgglAoYqsYOtQ'
 MIME_TYPE = 'audio/mp3'
 EXTENSION = 'mp3'
-MAX_RESULTS = 2
-ORDER = 'date'
-PART = 'snippet,id'
+MAX_RESULTS = 6
 
 
 def clear_local_media(tmp_dir):
@@ -34,16 +32,19 @@ def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-    search_url = 'https://www.googleapis.com/youtube/v3/search'
-    qs = 'key={}&channelId={}&part={}&order={}&maxResults={}'.format(
-        os.environ['YOUTUBE_KEY'], CHANNEL_ID, PART, ORDER, MAX_RESULTS)
-    search_url = '{}?{}'.format(search_url, qs)
-    items = requests.get(search_url).json()['items']
-    base_video_url = 'https://www.youtube.com/watch?v={}'
+    api_base_url = 'https://www.googleapis.com/youtube/v3/'
+    r = requests.get('{}channels?part=contentDetails&id={}&key={}'.format(
+        api_base_url, CHANNEL_ID, os.environ['YOUTUBE_KEY']))
+    playlist_id = r.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']  # noqa
+    s = requests.get(
+        '{}playlistItems?part=snippet&maxResults={}&playlistId={}&key={}'
+        .format(api_base_url, MAX_RESULTS, playlist_id,
+                os.environ['YOUTUBE_KEY']))
+    video_base_url = 'https://www.youtube.com/watch?v={}'
 
-    for item in items:
-        video_id = item['id']['videoId']
-        video_url = base_video_url.format(video_id)
+    for item in s.json()['items']:
+        video_id = item['snippet']['resourceId']['videoId']
+        video_url = video_base_url.format(video_id)
         file_name = '{}.{}'.format(video_id, EXTENSION)
         tmp_dir = tempfile.mkdtemp()
         atexit.register(clear_local_media, tmp_dir=tmp_dir)
