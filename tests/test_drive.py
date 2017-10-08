@@ -37,6 +37,12 @@ def test_delete_file(service, file_id):
     assert delete_file(service, file_id) == ''
 
 
+@pytest.mark.parametrize('file_id', [23])
+def test_delete_file_raises_exception_non_string_file_id(service, file_id):
+    with pytest.raises(TypeError):
+        delete_file(service, file_id)
+
+
 ASSETS = 'tests/assets/'
 GOOGLE_DRIVE_FOLDER_ID = '0BwbEOQcHjkRoZjN1S1M5SkVYeGM'
 

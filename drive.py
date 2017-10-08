@@ -94,4 +94,8 @@ def create_folder(service, name):
 
 
 def delete_file(service, file_id):
+
+    if not isinstance(file_id, str):
+        raise TypeError('File id should be a string.')
+
     return service.files().delete(fileId=file_id).execute()
