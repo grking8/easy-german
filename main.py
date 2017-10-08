@@ -7,6 +7,7 @@ import tempfile
 
 from apiclient import discovery
 
+from drive import create_folder
 from drive import get_credentials
 from drive import upload_media
 
@@ -38,11 +39,11 @@ def main():
         os.environ['YOUTUBE_KEY'], CHANNEL_ID, PART, ORDER, MAX_RESULTS)
     search_url = '{}?{}'.format(search_url, qs)
     items = requests.get(search_url).json()['items']
-    video_url = 'https://www.youtube.com/watch?v={}'
+    base_video_url = 'https://www.youtube.com/watch?v={}'
 
     for item in items:
         video_id = item['id']['videoId']
-        video_url = video_url.format(video_id)
+        video_url = base_video_url.format(video_id)
         file_name = '{}.{}'.format(video_id, EXTENSION)
         tmp_dir = tempfile.mkdtemp()
         atexit.register(clear_local_media, tmp_dir=tmp_dir)
@@ -56,7 +57,8 @@ def main():
         except Exception:
             logger.exception('Error downloading video.')
 
-        upload_media(service, local_path, MIME_TYPE)
+        upload_media(service, local_path, MIME_TYPE,
+                     parents=[create_folder(service, video_id).get('id')])
         clear_local_media(tmp_dir)
         atexit.unregister(clear_local_media)
 
