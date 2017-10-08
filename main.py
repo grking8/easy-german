@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 
 from apiclient import discovery
@@ -16,16 +17,12 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
 
-    youtube_key_path = 'key.txt'
-    with open(youtube_key_path, 'r') as f:
-        youtube_key = f.read()
-
     channel_id = 'UCbxb2fqe9oNgglAoYqsYOtQ'
     part = 'snippet,id'
     order = 'date'
     max_results = 20
     search_url = 'https://www.googleapis.com/youtube/v3/search?key={}&channelId={}&part={}&order={}&maxResults={}'.format(  # NOQA
-        youtube_key, channel_id, part, order, max_results)
+        os.environ['YOUTUBE_KEY'], channel_id, part, order, max_results)
 
     resp = requests.get(search_url)
     js = json.loads(resp.text)
@@ -36,7 +33,7 @@ def main():
     video_url = base_url.format(video_id)
 
     subprocess.check_output(['youtube-dl', video_url, '--extract-audio',
-                            '--audio-format', 'mp3', '--id'])
+                            '--audio-format', 'mp3', '--id', '--verbose'])
     mime_type = 'audio/mp3'
     path = '{}.{}'.format(video_id, mime_type.split('/')[-1])
 
