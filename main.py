@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 CHANNEL_ID = 'UCbxb2fqe9oNgglAoYqsYOtQ'
 MIME_TYPE = 'audio/mp3'
 EXTENSION = 'mp3'
-MAX_RESULTS = 6
+MAX_RESULTS = 1
 API_BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 VIDEO_BASE_URL = 'https://www.youtube.com/watch?v={}'
 YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
@@ -44,23 +44,23 @@ def main():
                 YOUTUBE_KEY))
 
     for item in s.json()['items']:
+        video_title = item['snippet']['title']
         video_id = item['snippet']['resourceId']['videoId']
         video_url = VIDEO_BASE_URL.format(video_id)
-        file_name = '{}.{}'.format(video_id, EXTENSION)
         tmp_dir = tempfile.mkdtemp()
         atexit.register(clear_local_media, tmp_dir=tmp_dir)
-        local_path = os.path.join(tmp_dir, file_name)
 
         try:
             subprocess.check_output(['youtube-dl', '--extract-audio',
-                                     '--audio-format', 'mp3', '--newline',
-                                     '--verbose', '--output', local_path,
+                                     '--audio-format', EXTENSION, '--output',
+                                     os.path.join(tmp_dir, '%(id)s.%(ext)s'),
                                      video_url])
         except Exception:
             logger.exception('Error downloading video.')
 
+        local_path = os.path.join(tmp_dir, '{}.{}'.format(video_id, EXTENSION))
         upload_media(service, local_path, MIME_TYPE,
-                     parents=[create_folder(service, video_id).get('id')])
+                     parents=[create_folder(service, video_title).get('id')])
         clear_local_media(tmp_dir)
         atexit.unregister(clear_local_media)
 
