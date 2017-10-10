@@ -1,4 +1,3 @@
-import atexit
 import logging
 import os
 import shutil
@@ -48,21 +47,22 @@ def main():
         video_id = item['snippet']['resourceId']['videoId']
         video_url = VIDEO_BASE_URL.format(video_id)
         tmp_dir = tempfile.mkdtemp()
-        atexit.register(clear_local_media, tmp_dir=tmp_dir)
 
         try:
             subprocess.check_output(['youtube-dl', '--extract-audio',
                                      '--audio-format', EXTENSION, '--output',
                                      os.path.join(tmp_dir, '%(id)s.%(ext)s'),
                                      video_url])
+            local_path = os.path.join(
+                tmp_dir, '{}.{}'.format(video_id, EXTENSION))
+            upload_media(service, local_path, MIME_TYPE,
+                         [create_folder(service, video_title).get('id')])
         except Exception:
-            logger.exception('Error downloading video.')
+            logger.exception(
+                'Error downloading or processing video {}, title {}.'.format(
+                    video_id, video_title))
 
-        local_path = os.path.join(tmp_dir, '{}.{}'.format(video_id, EXTENSION))
-        upload_media(service, local_path, MIME_TYPE,
-                     parents=[create_folder(service, video_title).get('id')])
         clear_local_media(tmp_dir)
-        atexit.unregister(clear_local_media)
 
 
 if __name__ == '__main__':
