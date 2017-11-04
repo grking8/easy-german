@@ -1,4 +1,3 @@
-client_secret.json
 __pycache__/
 *.mp3
 !tests/assets/*.mp3
