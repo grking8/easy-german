@@ -1,13 +1,14 @@
 
 from __future__ import print_function
-
 import os
 
 from apiclient.http import MediaFileUpload
-
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+
+import settings
+
 
 try:
     import argparse
@@ -19,8 +20,6 @@ except ImportError:
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/drive'
-CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'easy-german'
 
 
 def get_credentials():
@@ -38,14 +37,16 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
 
-    credential_path = os.path.join(credential_dir, 'easy-german.json')
+    credential_path = os.path.join(credential_dir, '{}.json'.format(
+        settings.APPLICATION_NAME))
 
     store = Storage(credential_path)
     credentials = store.get()
 
     if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-        flow.user_agent = APPLICATION_NAME
+        flow = client.flow_from_clientsecrets(
+            settings.GOOGLE_API_CLIENT_SECRET_FILE, SCOPES)
+        flow.user_agent = settings.APPLICATION_NAME
 
         if flags:
             credentials = tools.run_flow(flow, store, flags)

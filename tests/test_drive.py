@@ -1,15 +1,13 @@
 import os
 
 from apiclient import discovery
+import httplib2
+import pytest
 
 from drive import create_folder
 from drive import delete_file
 from drive import get_credentials
 from drive import upload_media
-
-import httplib2
-
-import pytest
 
 
 @pytest.fixture

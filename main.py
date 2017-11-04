@@ -5,25 +5,21 @@ import subprocess
 import tempfile
 
 from apiclient import discovery
+import httplib2
+import requests
 
 from drive import create_folder
 from drive import get_credentials
 from drive import upload_media
-
-import httplib2
-
-import requests
-
+import settings
 
 logger = logging.getLogger(__name__)
 
 CHANNEL_ID = 'UCbxb2fqe9oNgglAoYqsYOtQ'
 MIME_TYPE = 'audio/mp3'
 EXTENSION = 'mp3'
-MAX_RESULTS = 1
 API_BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 VIDEO_BASE_URL = 'https://www.youtube.com/watch?v={}'
-YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
 
 
 def clear_local_media(tmp_dir):
@@ -33,14 +29,15 @@ def clear_local_media(tmp_dir):
 def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
-    service = discovery.build('drive', 'v3', http=http)
+    service = discovery.build(
+        settings.GOOGLE_API_SERVICE, settings.GOOGLE_API_VERSION, http=http)
     r = requests.get('{}channels?part=contentDetails&id={}&key={}'.format(
-        API_BASE_URL, CHANNEL_ID, YOUTUBE_KEY))
+        API_BASE_URL, CHANNEL_ID, settings.YOUTUBE_KEY))
     playlist_id = r.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']  # noqa
     s = requests.get(
         '{}playlistItems?part=snippet&maxResults={}&playlistId={}&key={}'
-        .format(API_BASE_URL, MAX_RESULTS, playlist_id,
-                YOUTUBE_KEY))
+        .format(API_BASE_URL, settings.MAX_RESULTS, playlist_id,
+                settings.YOUTUBE_KEY))
 
     for item in s.json()['items']:
         video_title = item['snippet']['title']
@@ -65,5 +62,4 @@ def main():
         clear_local_media(tmp_dir)
 
 
-if __name__ == '__main__':
-    main()
+main()
