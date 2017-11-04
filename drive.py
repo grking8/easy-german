@@ -62,14 +62,7 @@ def upload_media(service, path, mime_type, parents=None, resumable=True):
     if not os.path.isfile(path):
         raise FileNotFoundError('Media file does not exist.')
 
-    splits = path.rsplit('/', 1)
-
-    if len(splits) == 1:
-        name = splits[0]
-    else:
-        name = splits[1]
-
-    file_metadata = {'name': name}
+    file_metadata = {'name': os.path.basename(path)}
 
     if parents:
         file_metadata['parents'] = parents
