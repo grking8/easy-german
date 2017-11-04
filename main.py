@@ -33,7 +33,8 @@ def main():
         settings.GOOGLE_API_SERVICE, settings.GOOGLE_API_VERSION, http=http)
     r = requests.get('{}channels?part=contentDetails&id={}&key={}'.format(
         API_BASE_URL, CHANNEL_ID, settings.YOUTUBE_KEY))
-    playlist_id = r.json()['items'][0]['contentDetails']['relatedPlaylists']['uploads']  # noqa
+    playlist_id = (r.json()['items'][0]['contentDetails']['relatedPlaylists']
+                   ['uploads'])
     s = requests.get(
         '{}playlistItems?part=snippet&maxResults={}&playlistId={}&key={}'
         .format(API_BASE_URL, settings.MAX_RESULTS, playlist_id,
