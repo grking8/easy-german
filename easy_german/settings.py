@@ -7,7 +7,7 @@ GOOGLE_API_SERVICE = 'drive'
 YOUTUBE_KEY = os.environ['YOUTUBE_KEY']
 APPLICATION_NAME = 'easy-german'
 MAX_RESULTS_PER_PAGE = 10  # <= 50
-MAX_DOWNLOADS = 300
+MAX_DOWNLOADS = 2
 LOGGING = {
     'general': 'INFO',
     'dependencies': {

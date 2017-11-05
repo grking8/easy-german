@@ -2,3 +2,5 @@ __pycache__/
 *.mp3
 !tests/assets/*.mp3
 .cache/
+dist/
+*.egg-info/
