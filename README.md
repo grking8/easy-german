@@ -8,7 +8,7 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 - Create a virtual environment `mkvirtualenv easy-german`
 
-- `pip install easy-german`
+- `pip install easygerman`
 
 - Download credentials file for Google APIs into home directory
 
