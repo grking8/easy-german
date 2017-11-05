@@ -8,9 +8,9 @@ import zipfile
 
 import requests
 
-from drive import upload_media
-import settings
-import utils
+from easy_german.drive import upload_media
+import easy_german.settings as settings
+import easy_german.utils as utils
 
 
 for key, val in settings.LOGGING['dependencies'].items():

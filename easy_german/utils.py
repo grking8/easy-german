@@ -5,8 +5,8 @@ import shutil
 from apiclient import discovery
 import httplib2
 
-from drive import get_credentials
-import settings
+from easy_german.drive import get_credentials
+from . import settings
 
 
 for key, val in settings.LOGGING['dependencies'].items():
