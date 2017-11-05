@@ -1,19 +1,20 @@
+import json
 import logging
 import os
-import shutil
 import subprocess
 import tempfile
 
-from apiclient import discovery
-import httplib2
 import requests
 
 from drive import create_folder
-from drive import get_credentials
 from drive import upload_media
 import settings
+import utils
 
-logging.basicConfig(level=logging.getLevelName(settings.LOGGING))
+
+for key, val in settings.LOGGING['dependencies'].items():
+    logging.getLogger(key).setLevel(logging.getLevelName(val))
+logging.basicConfig(level=logging.getLevelName(settings.LOGGING['general']))
 logger = logging.getLogger(__name__)
 
 CHANNEL_ID = 'UCbxb2fqe9oNgglAoYqsYOtQ'
@@ -21,13 +22,15 @@ MIME_TYPE = 'audio/mp3'
 EXTENSION = 'mp3'
 API_BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 VIDEO_BASE_URL = 'https://www.youtube.com/watch?v={}'
+EPISODES = {
+    'easy_german': {},
+    'super_easy_german': {},
+}
+SEG_SEARCH = r'(?<=Super Easy German) \(\d{0,5}\)'
+EG_SEARCH = r'(?<=Easy German) \d{0,5}'
 
 
-def clear_local_media(tmp_dir):
-    shutil.rmtree(tmp_dir, ignore_errors=True)
-
-
-def process_items(service, items, videos_downloaded):
+def process_items(gdrive_service, items, videos_downloaded):
     logger.info('Processing up to {} items'.format(len(items)))
     result = 0
     for item in items:
@@ -42,8 +45,11 @@ def process_items(service, items, videos_downloaded):
                                      video_url])
             local_path = os.path.join(
                 tmp_dir, '{}.{}'.format(video_id, EXTENSION))
-            upload_media(service, local_path, MIME_TYPE,
-                         [create_folder(service, video_title).get('id')])
+            folder_id = create_folder(gdrive_service, video_title).get('id')
+            upload_media(gdrive_service, local_path, MIME_TYPE, [folder_id])
+            episode = utils.extract_episode(video_title, SEG_SEARCH, EG_SEARCH)
+            if episode:
+                EPISODES[episode['type']][episode['number']] = folder_id
             logger.info('Processed successfully video: {}, title: {}'.format(
                 video_id, video_title))
             result += 1
@@ -51,7 +57,7 @@ def process_items(service, items, videos_downloaded):
             logger.exception(
                 'Error processing video: {}, title: {}'.format(
                     video_id, video_title))
-        clear_local_media(tmp_dir)
+        utils.clear_local_media(tmp_dir)
         if result + videos_downloaded >= settings.MAX_DOWNLOADS:
             logger.info('Stopping as maximum number of videos downloaded')
             logger.info('{} videos processed in this batch'.format(result))
@@ -62,17 +68,8 @@ def process_items(service, items, videos_downloaded):
 
 def main():
     videos_downloaded = 0
-    logger.info('Getting credentials and authorising for Google Drive')
-    try:
-        credentials = get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        logger.info('Google Drive authorisation successful')
-    except Exception:
-        logger.exception(
-            'Unable to get credentials and authorise for Google Drive')
-    service = discovery.build(
-        settings.GOOGLE_API_SERVICE, settings.GOOGLE_API_VERSION, http=http)
-    if service:
+    gdrive_service = utils.get_gdrive_service()
+    if gdrive_service:
         logger.info('Getting playlist id')
         try:
             r = requests.get('{}channels?part=contentDetails&id={}&key={}'
@@ -84,7 +81,7 @@ def main():
         except Exception:
             logger.exception('Unable to get playlist id')
         if playlist_id:
-            logger.info('Attempting to download a maximum of {} videos'.format(
+            logger.info('Attempting to download up to {} videos'.format(
                 settings.MAX_DOWNLOADS))
             s_js = requests.get(
                 '{}playlistItems?part=snippet&maxResults={}&playlistId={}'
@@ -92,7 +89,7 @@ def main():
                 .format(API_BASE_URL, settings.MAX_RESULTS_PER_PAGE,
                         playlist_id, settings.YOUTUBE_KEY)).json()
             videos_downloaded += process_items(
-                service, s_js.get('items', []), videos_downloaded)
+                gdrive_service, s_js.get('items', []), videos_downloaded)
             logger.info('{} videos downloaded'.format(videos_downloaded))
             next_page_token = s_js.get('nextPageToken')
             while (next_page_token and
@@ -104,11 +101,13 @@ def main():
                         playlist_id, settings.YOUTUBE_KEY, next_page_token)
                 ).json()
                 videos_downloaded += process_items(
-                    service, s_js.get('items', []), videos_downloaded)
+                    gdrive_service, s_js.get('items', []), videos_downloaded)
                 logger.info('{} videos downloaded'.format(videos_downloaded))
                 next_page_token = s_js.get('nextPageToken')
             logger.info('Downloading finished, {} videos downloaded'.format(
                 videos_downloaded))
+            with open(settings.EPISODES_FILE, 'w') as f:
+                json.dump(EPISODES, f)
 
 
 main()
