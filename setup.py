@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
+    description='Download Easy German videos and transcripts',
     name='easygerman',
     packages=find_packages(),
     install_requires=[
@@ -12,4 +13,5 @@ setup(
     url='https://github.com/family-guy/easy-german',
     author='Guy King',
     author_email='guy@zorncapital.com',
+    version='0.1'
 )
