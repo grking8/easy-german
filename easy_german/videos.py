@@ -30,7 +30,7 @@ SEG_SEARCH = r'(?<=Super Easy German) \(\d{0,5}\)'
 EG_SEARCH = r'(?<=Easy German) \d{0,5}'
 
 
-def process_items(gdrive_service, items, videos_downloaded):
+def process_items(gdrive_service, items, videos_downloaded, max_downloads):
     logger.info('Processing up to {} items'.format(len(items)))
     result = 0
     for item in items:
@@ -58,7 +58,7 @@ def process_items(gdrive_service, items, videos_downloaded):
                 'Error processing video: {}, title: {}'.format(
                     video_id, video_title))
         utils.clear_local_media(tmp_dir)
-        if result + videos_downloaded >= settings.MAX_DOWNLOADS:
+        if result + videos_downloaded >= max_downloads:
             logger.info('Stopping as maximum number of videos downloaded')
             logger.info('{} videos processed in this batch'.format(result))
             return result
@@ -66,7 +66,7 @@ def process_items(gdrive_service, items, videos_downloaded):
     return result
 
 
-def main():
+def main(max_downloads, max_results_per_page):
     videos_downloaded = 0
     gdrive_service = utils.get_gdrive_service()
     if gdrive_service:
@@ -82,26 +82,28 @@ def main():
             logger.exception('Unable to get playlist id')
         if playlist_id:
             logger.info('Attempting to download up to {} videos'.format(
-                settings.MAX_DOWNLOADS))
+                max_downloads))
             s_js = requests.get(
                 '{}playlistItems?part=snippet&maxResults={}&playlistId={}'
                 '&key={}'
-                .format(API_BASE_URL, settings.MAX_RESULTS_PER_PAGE,
-                        playlist_id, settings.YOUTUBE_KEY)).json()
+                .format(API_BASE_URL, max_results_per_page, playlist_id,
+                        settings.YOUTUBE_KEY)).json()
             videos_downloaded += process_items(
-                gdrive_service, s_js.get('items', []), videos_downloaded)
+                gdrive_service, s_js.get('items', []), videos_downloaded,
+                max_downloads)
             logger.info('{} videos downloaded'.format(videos_downloaded))
             next_page_token = s_js.get('nextPageToken')
             while (next_page_token and
-                   videos_downloaded < settings.MAX_DOWNLOADS):
+                   videos_downloaded < max_downloads):
                 s_js = requests.get(
                     '{}playlistItems?part=snippet&maxResults={}&playlistId={}'
                     '&key={}&pageToken={}'.format(
-                        API_BASE_URL, settings.MAX_RESULTS_PER_PAGE,
-                        playlist_id, settings.YOUTUBE_KEY, next_page_token)
+                        API_BASE_URL, max_results_per_page, playlist_id,
+                        settings.YOUTUBE_KEY, next_page_token)
                 ).json()
                 videos_downloaded += process_items(
-                    gdrive_service, s_js.get('items', []), videos_downloaded)
+                    gdrive_service, s_js.get('items', []), videos_downloaded,
+                    max_downloads)
                 logger.info('{} videos downloaded'.format(videos_downloaded))
                 next_page_token = s_js.get('nextPageToken')
             logger.info('Downloading finished, {} videos downloaded'.format(
