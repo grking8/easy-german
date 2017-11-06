@@ -13,5 +13,5 @@ setup(
     url='https://github.com/family-guy/easy-german',
     author='Guy King',
     author_email='guy@zorncapital.com',
-    version='0.1.2'
+    version='0.2.0'
 )

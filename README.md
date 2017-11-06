@@ -4,13 +4,13 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 ## Setup
 
-- Create a virtual environment `mkvirtualenv easy-german`
+- Create a virtual environment, e.g. `mkvirtualenv easy-german`
 
 - `pip install easygerman`
 
 - Download credentials file for Google APIs into home directory
 
-- Update environment variables and set number of videos to download / pagination (see `settings.py`)
+- Set environment variables (see `settings.py`)
 
 - Run tests: `pytest`
 
