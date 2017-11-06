@@ -108,6 +108,3 @@ def main():
                 videos_downloaded))
             with open(settings.EPISODES_FILE, 'w') as f:
                 json.dump(EPISODES, f)
-
-
-main()

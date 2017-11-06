@@ -59,6 +59,3 @@ def main():
                                 [folder_id])
             utils.clear_local_media(tmp_dir)
             os.remove(settings.EPISODES_FILE)
-
-
-main()
