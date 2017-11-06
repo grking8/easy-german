@@ -4,8 +4,6 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 ## Setup
 
-- Clone the git repository
-
 - Create a virtual environment `mkvirtualenv easy-german`
 
 - `pip install easygerman`
@@ -16,4 +14,11 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 - Run tests `pytest`
 
-- Download videos and transcripts `python easy_german/videos.py && python easy_german/transcripts.py`
+- Download videos and transcripts
+
+```
+import easy_german
+
+easy_german.get_videos(max_downloads=150, max_results_per_page=20)
+easy_german.get_transcripts
+```
