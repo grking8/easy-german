@@ -14,11 +14,11 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 - Run tests `pytest`
 
-- Download videos and transcripts
+- Download videos and transcripts:
 
 ```
 import easy_german
 
 easy_german.get_videos(max_downloads=150, max_results_per_page=20)
-easy_german.get_transcripts
+easy_german.get_transcripts()
 ```
