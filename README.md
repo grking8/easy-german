@@ -12,9 +12,9 @@ Download [Easy German](http://easygerman.org/) videos and transcripts.
 
 - Update environment variables and set number of videos to download / pagination (see `settings.py`)
 
-- Run tests `pytest`
+- Run tests: `pytest`
 
-- Download videos and transcripts:
+## Usage
 
 ```
 import easy_german
