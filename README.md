@@ -4,7 +4,9 @@ Download [Easy German](http://easygerman.org/) videos and transcripts into Googl
 
 ## Usage
 
-`pip install easygerman`
+```
+pip install easygerman
+```
 
 then:
 
