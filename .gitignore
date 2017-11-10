@@ -6,4 +6,4 @@ dist/
 *.egg-info/
 docs/_site/
 docs/.sass-cache/
-docs/.DS_Store
+.DS_Store
