@@ -1,6 +1,6 @@
 ## Description
 
-Download [Easy German](http://easygerman.org/) videos and transcripts into Google Drive.
+Download [Easy German]("http://easygerman.org/"") videos and transcripts and upload to Google Drive.
 
 ## Usage
 
@@ -19,7 +19,7 @@ easy_german.get_transcripts()
 
 ## Documentation
 
-Can be found here.
+Can be found [here]("https://family-guy.github.io/easy-german/").
 
 ## License
 
