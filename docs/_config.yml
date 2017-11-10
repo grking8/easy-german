@@ -7,7 +7,7 @@ author:
   name: CloudCannon
   email: support@cloudcannon.com
 
-baseurl: /blog
+baseurl: /easy-german
 
 builds:
   - Any
