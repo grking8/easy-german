@@ -1,6 +1,6 @@
 ## Description
 
-Download [Easy German](http://easygerman.org/) videos and transcripts and upload to Google Drive.
+Download [Easy German](http://easygerman.org/) videos and transcripts (subtitles) and upload to Google Drive.
 
 ## Setup (Mac OS X / Linux)
 
