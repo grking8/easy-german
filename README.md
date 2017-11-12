@@ -9,6 +9,7 @@ Download [Easy German](http://easygerman.org/) videos and transcripts and upload
 - Create an API key https://console.developers.google.com/apis/credentials
 - Add `export YOUTUBE_KEY=<apikey>` to `~/.bash_profile` or `~/.bashrc`
 - Follow a-g in [Step 1](https://developers.google.com/drive/v3/web/quickstart/python) and add another environment variable in `~/.bash_profile` or `~/.bashrc` called `GOOGLE_API_CLIENT_SECRET_FILE` pointing to the path of the downloaded file
+- `source ~/.bashrc` or `source ~/.bash_profile`
 - In `~/.credentials` there should be a `JSON` file, e.g. `drive-python-quickstart.json`. Rename this to `easy-german.json`
 
 ## Usage
