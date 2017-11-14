@@ -22,7 +22,7 @@ easy_german.get_transcripts()
 
 ## Documentation
 
-[Code docs,](https://readthedocs.org/) [project wiki](https://family-guy.github.io/easy-german-wiki/)
+[Code,](https://readthedocs.org/) [wiki](https://family-guy.github.io/easy-german-wiki/)
 
 ## License
 
