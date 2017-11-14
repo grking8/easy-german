@@ -4,6 +4,4 @@ __pycache__/
 .cache/
 dist/
 *.egg-info/
-docs/_site/
-docs/.sass-cache/
 .DS_Store
