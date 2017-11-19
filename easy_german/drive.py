@@ -8,14 +8,6 @@ from oauth2client.file import Storage
 
 from . import settings
 
-
-try:
-    import argparse
-    flags = argparse.ArgumentParser(
-        parents=[tools.argparser]).parse_args()
-except ImportError:
-    flags = None
-
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/drive'
@@ -30,6 +22,12 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
+    try:
+        import argparse
+        flags = argparse.ArgumentParser(
+            parents=[tools.argparser]).parse_args()
+    except ImportError:
+        flags = None
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
 
