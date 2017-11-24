@@ -1,3 +1,4 @@
+"""Utility functions."""
 import logging
 import re
 import shutil
@@ -16,10 +17,24 @@ logger = logging.getLogger(__name__)
 
 
 def clear_local_media(tmp_dir):
+    """
+    Remove directory tree.
+
+    :param str tmp_dir: Path of tree root directory to remove.
+    """
     shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def extract_episode(text, seg_search, eg_search):
+    """
+    Extract episode number from metadata.
+
+    :param str text: Metadata containing episode number.
+    :param str seg_search: Regex for a `Super Easy German` episode.
+    :param str eg_search: Regex for an `Easy German` episode.
+    :return: Episode number and type.
+    :rtype: dict
+    """
     seg_match = re.search(seg_search, text, re.IGNORECASE)
     if seg_match:
         return {
@@ -36,6 +51,12 @@ def extract_episode(text, seg_search, eg_search):
 
 
 def get_gdrive_service():
+    """
+    Attempt to authenticate and get Google Drive API service.
+
+    :return: Google Drive API service.
+    :rtype: An instance of a Google Drive API class.
+    """
     logger.info('Getting credentials and authorising for Google Drive')
     try:
         credentials = get_credentials()

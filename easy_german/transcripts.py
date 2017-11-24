@@ -1,3 +1,4 @@
+"""Scrape video transcripts and upload to Google Drive."""
 import io
 import json
 import logging
@@ -24,6 +25,7 @@ EG_SEARCH = r'(?<=EG) \d{0,5}'
 
 
 def main():
+    """Scrape transcripts and upload to Google Drive."""
     gdrive_service = utils.get_gdrive_service()
     if gdrive_service:
         tmp_dir = tempfile.mkdtemp()

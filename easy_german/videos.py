@@ -1,3 +1,4 @@
+"""Scrape video audio and upload to Google Drive."""
 import json
 import logging
 import os
@@ -31,6 +32,17 @@ EG_SEARCH = r'(?<=Easy German) \d{0,5}'
 
 
 def process_items(gdrive_service, items, videos_downloaded, max_downloads):
+    """
+    Process YouTube playlist items.
+
+    :param gdrive_service: Google Drive API service.
+    :param list items: YouTube playlist items to process.
+    :param int videos_downloaded: Total number of video audios downloaded so
+                                  far.
+    :param int max_downloads: Maximum number of video audios to download.
+    :return: Number of video audios downloaded in the current batch.
+    :rtype: int
+    """
     logger.info('Processing up to {} items'.format(len(items)))
     result = 0
     for item in items:
@@ -67,6 +79,14 @@ def process_items(gdrive_service, items, videos_downloaded, max_downloads):
 
 
 def main(max_downloads, max_results_per_page):
+    """
+    Scrape audio and upload to Google Drive.
+
+    :param int max_downloads: Maximum number of video audios to scrape and
+                              download.
+    :param int max_results_per_page: Maximum number in each batch; less than or
+                                     equal to 50 as per YouTube API pagination.
+    """
     videos_downloaded = 0
     gdrive_service = utils.get_gdrive_service()
     if gdrive_service:
