@@ -1,1 +1,1 @@
-easy_german
+easy_german==0.2.0
