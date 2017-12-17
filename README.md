@@ -11,6 +11,7 @@ Download [Easy German](http://easygerman.org/) videos and transcripts (subtitles
 - Follow a-g in [Step 1](https://developers.google.com/drive/v3/web/quickstart/python) and add another environment variable in `~/.bash_profile` or `~/.bashrc` called `GOOGLE_API_CLIENT_SECRET_FILE` pointing to the path of the downloaded file
 - `source ~/.bashrc` or `source ~/.bash_profile`
 - In `~/.credentials` there should be a `JSON` file, e.g. `drive-python-quickstart.json`. Rename this to `easy-german.json`
+- If error `ffprobe or avprobe not found. Please install one.`, install missing programs, e.g. on Ubuntu `sudo apt-get install -y libav-tools` as per [here](https://github.com/rg3/youtube-dl/issues/3160)
 
 ## Usage
 ```
