@@ -19,7 +19,7 @@ for key, val in settings.LOGGING['dependencies'].items():
 logging.basicConfig(level=logging.getLevelName(settings.LOGGING['general']))
 logger = logging.getLogger(__name__)
 
-URL = 'https://www.dropbox.com/sh/o8ea17w720i4zgs/AACXZG3l3IkAjcO-0tz7EJlLa?dl=1'  # noqa
+URL = 'https://www.dropbox.com/sh/27hpu9mxwnnq9dp/AABiecsN99X1UQkxBikj3bA-a?dl=1'  # noqa
 SEG_SEARCH = r'(?<=SEG) \d{0,5}'
 EG_SEARCH = r'(?<=EG) \d{0,5}'
 
@@ -30,6 +30,7 @@ def main():
     if gdrive_service:
         tmp_dir = tempfile.mkdtemp()
         logger.info('Downloading transcripts')
+        z = None
         try:
             r = requests.get(URL)
             z = zipfile.ZipFile(io.BytesIO(r.content))
