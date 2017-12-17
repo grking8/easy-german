@@ -7,10 +7,9 @@ import tempfile
 
 import requests
 
-from easy_german.drive import create_folder
-from easy_german.drive import upload_media
-import easy_german.settings as settings
-import easy_german.utils as utils
+from . import drive
+from . import settings
+from . import utils
 
 
 for key, val in settings.LOGGING['dependencies'].items():
@@ -57,8 +56,8 @@ def process_items(gdrive_service, items, videos_downloaded, max_downloads):
                                      video_url])
             local_path = os.path.join(
                 tmp_dir, '{}.{}'.format(video_id, EXTENSION))
-            folder_id = create_folder(gdrive_service, video_title).get('id')
-            upload_media(gdrive_service, local_path, MIME_TYPE, [folder_id])
+            folder_id = drive.create_folder(gdrive_service, video_title).get('id')
+            drive.upload_media(gdrive_service, local_path, MIME_TYPE, [folder_id])
             episode = utils.extract_episode(video_title, SEG_SEARCH, EG_SEARCH)
             if episode:
                 EPISODES[episode['type']][episode['number']] = folder_id

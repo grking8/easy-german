@@ -6,7 +6,7 @@ import shutil
 from apiclient import discovery
 import httplib2
 
-from easy_german.drive import get_credentials
+from . import drive
 from . import settings
 
 
@@ -59,7 +59,7 @@ def get_gdrive_service():
     """
     logger.info('Getting credentials and authorising for Google Drive')
     try:
-        credentials = get_credentials()
+        credentials = drive.get_credentials()
         http = credentials.authorize(httplib2.Http())
         logger.info('Google Drive authorisation successful')
         return discovery.build(

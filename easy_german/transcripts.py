@@ -9,9 +9,9 @@ import zipfile
 
 import requests
 
-from easy_german.drive import upload_media
-import easy_german.settings as settings
-import easy_german.utils as utils
+from . import drive
+from . import settings
+from . import utils
 
 
 for key, val in settings.LOGGING['dependencies'].items():
@@ -55,7 +55,7 @@ def main():
                                 ' episode number: {}'.format(
                                     filename, episode['type'],
                                     episode['number']))
-                            upload_media(
+                            drive.upload_media(
                                 gdrive_service,
                                 filepath,
                                 mimetypes.guess_type(filename),
