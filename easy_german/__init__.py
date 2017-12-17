@@ -3,9 +3,6 @@ from . import videos
 from . import transcripts
 
 
-__version__ = '0.2.1'
-
-
 def get_videos(max_downloads=1, max_results_per_page=10):
     """
     Scrape video audio and upload to Google Drive.
